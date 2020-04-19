@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'antlr'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+
+dependencies {
+    antlr group: 'org.antlr', name: 'antlr4', version: '4.8-1'
+    compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.8-1'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+/*
+generateGrammarSource {
+    maxHeapSize = "64m"
+    arguments += ['-package', 'me.tomassetti.examples.MarkupParser']
+    outputDirectory = new File("generated-src/antlr/main/me/tomassetti/examples/MarkupParser".toString())
+}
+
+compileJava.dependsOn generateGrammarSource
+
+sourceSets {
+    generated {
+        java.srcDir 'generated-src/antlr/main/'
+    }
+}
+
+compileJava.source sourceSets.generated.java, sourceSets.main.java
+
+clean{
+    delete "generated-src"
+}
+
+idea {
+    module {
+        sourceDirs += file("generated-src/antlr/main")
+    }
+}
+*/

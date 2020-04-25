@@ -13,7 +13,9 @@ statement
     | functionInvocation NEWLINE*
     ;
 
-assignment: VARIABLE_NAME ASSIGN (literal | expression);
+assignment
+    : VARIABLE_NAME ASSIGN (literal | expression)
+    ;
 
 expression
     : multiplyingExpression ((PLUS | MINUS) multiplyingExpression)*
@@ -24,27 +26,38 @@ multiplyingExpression
     ;
 
 powExpression
-   : signedAtom (POW signedAtom)*
+   : atomExpression (POW atomExpression)*
    ;
 
-signedAtom
+atomExpression
    : atom
+   | (PLUS | MINUS) atom
    | functionInvocation
-   | (PLUS | MINUS) signedAtom
    ;
 
 atom
     : numberLiteral
     | variable
     | constant
-    | TOINT expression
-    | TOFLOAT expression
+    | casting expression
     | LROUNDBRACKET expression RROUNDBRACKET
     ;
 
-constant
-    : PI
+functionInvocation: buildInFunction LROUNDBRACKET (literal | expression) (COMMA (literal | expression))* RROUNDBRACKET;
+
+variable: VARIABLE_NAME;
+
+casting
+    : toIntCasting
+    | toFloatCasting
     ;
+
+literal
+	: numberLiteral
+	| BooleanLiteral
+	| StringLiteral
+	| NullLiteral
+	;
 
 numberLiteral
    : FloatingPointLiteral
@@ -52,29 +65,22 @@ numberLiteral
    | ScientificNumberLiteral
    ;
 
-variable: VARIABLE_NAME;
+constant
+    : PI
+    ;
 
-functionInvocation: buildInFunction LROUNDBRACKET (literal | expression) (COMMA (literal | expression))* RROUNDBRACKET;
+toIntCasting: LROUNDBRACKET INT RROUNDBRACKET;
+
+toFloatCasting: LROUNDBRACKET FLOAT RROUNDBRACKET;
 
 buildInFunction
     : PRINT
     | READ
     | COS
     | SIN
+    | TAN
+    | CTG
     ;
-
-literal
-	: IntegerLiteral
-	| FloatingPointLiteral
-	| ScientificNumberLiteral
-	| BooleanLiteral
-	| StringLiteral
-	| NullLiteral
-	;
-
-// toIntCasting: TOINT;
-
-// toFloatCasting: TOFLOAT;
 
 // plus: PLUS;
 
@@ -89,6 +95,10 @@ PRINT: 'print';
 READ: 'read';
 COS: 'cos';
 SIN: 'sin';
+INT: 'int';
+FLOAT: 'float';
+TAN: 'tan';
+CTG: 'ctg';
 
 
 // Separators
@@ -114,6 +124,7 @@ POW: '^';
 
 // Constants
 PI: 'pi';
+E: ('e' | 'E');
 
 
 // Literals
@@ -133,12 +144,7 @@ StringLiteral: '"' ( ~('\\'|'"') )* '"';
 NullLiteral: 'null';
 
 
-// Foundation
-
-
-
-fragment PlusMinus: (PLUS | MINUS);
-
+// Base
 fragment Digit: [0-9];
 
 fragment Letter: [a-zA-Z];
@@ -154,11 +160,5 @@ NEWLINE
     : '\r'? '\n'
     | '\r'
     ;
-
-TOINT: LROUNDBRACKET 'int' RROUNDBRACKET;
-
-TOFLOAT: LROUNDBRACKET 'float' RROUNDBRACKET;
-
-E: ('e' | 'E');
 
 WHITESPACE : [ \t] -> skip;

@@ -4,31 +4,81 @@ grammar SimpleLang;
  * Parser Rules
  */
 
-program: line* EOF;
-
-line: statement ';'+;
-
-statement
-    : assignment
-    | functionInvocation
+program
+    : NEWLINE* ( statement )* EOF
     ;
 
-assignment : VariableName '=' literal;
+statement
+    : assignment NEWLINE*
+    | functionInvocation NEWLINE*
+    ;
 
-functionInvocation: buildInFunctions '(' (literal | VariableName) ')';
+assignment: VARIABLE_NAME ASSIGN (literal | expression);
+
+expression
+    : multiplyingExpression ((PLUS | MINUS) multiplyingExpression)*
+    ;
+
+multiplyingExpression
+    : powExpression ((MULTIPLY | DIVIDE) powExpression)*
+    ;
+
+powExpression
+   : signedAtom (POW signedAtom)*
+   ;
+
+signedAtom
+   : atom
+   | functionInvocation
+   | (PLUS | MINUS) signedAtom
+   ;
+
+atom
+    : numberLiteral
+    | variable
+    | constant
+    | TOINT expression
+    | TOFLOAT expression
+    | LROUNDBRACKET expression RROUNDBRACKET
+    ;
+
+constant
+    : PI
+    ;
+
+numberLiteral
+   : FloatingPointLiteral
+   | IntegerLiteral
+   | ScientificNumberLiteral
+   ;
+
+variable: VARIABLE_NAME;
+
+functionInvocation: buildInFunction LROUNDBRACKET (literal | expression) (COMMA (literal | expression))* RROUNDBRACKET;
+
+buildInFunction
+    : PRINT
+    | READ
+    | COS
+    | SIN
+    ;
 
 literal
 	: IntegerLiteral
 	| FloatingPointLiteral
+	| ScientificNumberLiteral
 	| BooleanLiteral
 	| StringLiteral
 	| NullLiteral
 	;
 
-buildInFunctions
-    : PRINT
-    | READ
-    ;
+// toIntCasting: TOINT;
+
+// toFloatCasting: TOFLOAT;
+
+// plus: PLUS;
+
+// multiply: MULTIPLY;
 
 /*
  * Lexer Rules
@@ -37,15 +87,17 @@ buildInFunctions
 // Keywords
 PRINT: 'print';
 READ: 'read';
+COS: 'cos';
+SIN: 'sin';
 
 
 // Separators
-CBRACKETOPEN: '{';
-CBRACKETCLOSE: '}';
-SBRACKETOPEN: '[';
-SBRACKETCLOSE: ']';
-RBRACKETOPEN: '(';
-RBRACKETCLOSE: ')';
+LCURLYBRACKET: '{';
+RCURLYBRACKET: '}';
+LSQUAREBRACKET: '[';
+RSQUAREBRACKET: ']';
+LROUNDBRACKET: '(';
+RROUNDBRACKET: ')';
 SEMICOLON : ';';
 COMMA : ',';
 DOT : '.';
@@ -57,24 +109,34 @@ MULTIPLY: '*';
 PLUS: '+';
 MINUS: '-';
 DIVIDE: '/';
+POW: '^';
+
+
+// Constants
+PI: 'pi';
 
 
 // Literals
-FloatingPointLiteral: PlusMinus? Digit+ DOT Digit+;
+FloatingPointLiteral: Digit+ DOT Digit+;
 
-IntegerLiteral: PlusMinus? Digit+;
+IntegerLiteral: Digit+;
+
+ScientificNumberLiteral: E (PLUS | MINUS)? Digit+;
 
 BooleanLiteral
     : 'true'
     | 'false'
     ;
 
-StringLiteral: '"' LetterOrDigit '"'; // TODO
+StringLiteral: '"' ( ~('\\'|'"') )* '"';
 
 NullLiteral: 'null';
 
 
 // Foundation
+
+
+
 fragment PlusMinus: (PLUS | MINUS);
 
 fragment Digit: [0-9];
@@ -86,8 +148,17 @@ fragment LetterOrDigit
     | [0-9]
     ;
 
-VariableName: Letter LetterOrDigit*; // TODO
+VARIABLE_NAME: [_]*[A-Za-z][A-Za-z0-9_]*;
 
-NEWLINE : ('\r'? '\n' | '\r')+ -> skip;
+NEWLINE
+    : '\r'? '\n'
+    | '\r'
+    ;
 
-WHITESPACE : [ \t\u000C] -> skip;
+TOINT: LROUNDBRACKET 'int' RROUNDBRACKET;
+
+TOFLOAT: LROUNDBRACKET 'float' RROUNDBRACKET;
+
+E: ('e' | 'E');
+
+WHITESPACE : [ \t] -> skip;

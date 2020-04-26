@@ -27,12 +27,21 @@ public class BuildInFunctionsHandler {
     }
 
     public static void handleRead(org.simplelang.SimpleLangParser.FunctionInvocationContext ctx) {
-        /*String ID = ctx.VariableName().get(0).getText();
-        if (!variableSet.contains(ID)) {
-            variableSet.add(ID);
-            LLVMGenerator.declare(ID);
+        if (Objects.nonNull(ctx.variable())) {
+            if (ctx.variable().isEmpty() || ctx.variable().size() > 1) {
+                ErrorMessages.error(ctx.getStart().getLine(), "Incorrect number of arguments");
+            }
+            String variableName = ctx.variable().get(0).getText();
+            System.out.println(VariablesContainer.getInstance().variableExists(variableName));
+            if (VariablesContainer.getInstance().variableExists(variableName)) {
+                ErrorMessages.error(ctx.getStart().getLine(), "Cannot read to existing variable");
+            } else {
+                VariablesContainer.getInstance().putVariable(variableName, VariableType.STRING);
+                LLVMGenerator.scanf(variableName);
+            }
+        } else {
+            ErrorMessages.error(ctx.getStart().getLine(), "Read function accept only variable as argument");
         }
-        LLVMGenerator.scanf(ID);*/
     }
 
     public static void handleSin(org.simplelang.SimpleLangParser.FunctionInvocationContext ctx) {

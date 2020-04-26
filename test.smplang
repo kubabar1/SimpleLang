@@ -20,3 +20,6 @@ print(z)
 
 z = "qwertyuiop"
 print(z)
+
+read(q)
+print(q)

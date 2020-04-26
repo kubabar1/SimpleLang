@@ -1,6 +1,7 @@
 package org.simplelang.listener;
 
 import org.simplelang.SimpleLangParser;
+import org.simplelang.error.ErrorMessages;
 import org.simplelang.listener.container.VariablesContainer;
 import org.simplelang.listener.container.base.Value;
 import org.simplelang.listener.container.base.VariableType;
@@ -35,8 +36,12 @@ public class AssignmentListener extends org.simplelang.SimpleLangBaseListener {
             LLVMGenerator.declareAndAssignString(variableName, stringValue.substring(1, stringValue.length() - 1));
             VariablesContainer.getInstance().putVariable(variableName, VariableType.STRING);
         } else {
-            String stringValue = ctx.literal().getText();
-            LLVMGenerator.reasignString(variableName, stringValue.substring(1, stringValue.length() - 1));
+            if (VariablesContainer.getInstance().getVariableType(variableName).equals(VariableType.STRING)) {
+                String stringValue = ctx.literal().getText();
+                LLVMGenerator.reasignString(variableName, stringValue.substring(1, stringValue.length() - 1));
+            } else {
+                ErrorMessages.error(ctx.getStart().getLine(), "Cannot string to variable of different type");
+            }
         }
     }
 

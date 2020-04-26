@@ -8,6 +8,8 @@ public class LLVMGenerator {
 
     public static int reg = 1;
 
+    private static int bufferSize = 256;
+
     static {
         headerText += LLVMConstants.declarePrintf;
         headerText += LLVMConstants.declareScanf;
@@ -143,7 +145,6 @@ public class LLVMGenerator {
         reg++;
         mainText += "\t%" + variableName + " = alloca i8*\n";
         mainText += "\tstore i32 0, i32* %" + (reg - 1) + "\n";
-        //reg++;
 
         // string = (char *) malloc((6+1)*sizeof(char));
         mainText += "\t%" + reg + " = call noalias i8* @malloc(i64 " + (stringValue.length() + 1) + ")\n";
@@ -199,7 +200,27 @@ public class LLVMGenerator {
         reg++;
         mainText += "\t\t%" + reg + " = call i8* @strcpy(i8* %" + (reg - 1) + ", i8* getelementptr inbounds ([" + (stringValue.length() + 1) + " x i8], [" + (stringValue.length() + 1) + " x i8]* " + funcName + ", i64 0, i64 0))\n";
         reg++;
+    }
 
+    public static void scanf(String variableName) {
+        String functName = "@str-" + reg;
+        headerText += functName + " = private unnamed_addr constant [3 x i8] c\"%s\\00\"\n";
 
+        // char *string;
+        mainText += "\t%" + reg + " = alloca i32\n";
+        reg++;
+        mainText += "\t%" + variableName + " = alloca i8*\n";
+        mainText += "\tstore i32 0, i32* %" + (reg - 1) + "\n";
+
+        // string = (char *) malloc((6+1)*sizeof(char));
+        mainText += "\t%" + reg + " = call noalias i8* @malloc(i64 " + bufferSize + ")\n";
+        mainText += "\tstore i8* %" + reg + ", i8** %" + variableName + "\n";
+        reg++;
+
+        //scanf("%s",x);
+        mainText += "\t%" + reg + " = load i8*, i8** %" + variableName + "\n";
+        reg++;
+        mainText += "\t%" + reg + " = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* " + functName + ", i64 0, i64 0), i8* %" + (reg - 1) + ")\n";
+        reg++;
     }
 }

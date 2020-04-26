@@ -1,6 +1,6 @@
 package org.simplelang.llvm;
 
-public class LLVMConstants {
+final class LLVMConstants {
 
     static final String declarePrintf = "declare i32 @printf(i8*, ...)\n";
 

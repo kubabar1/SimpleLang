@@ -8,19 +8,15 @@ public class LLVMGenerator {
 
     public static int reg = 1;
 
-    private static String declarePrintf = "declare i32 @printf(i8*, ...)\n";
-
-    private static String declareScanf = "declare i32 @__isoc99_scanf(i8*, ...)\n";
-
-    private static String printIntegerNewLine = "@strpi = constant [4 x i8] c\"%d\\0A\\00\"\n";
-
-    private static String printFloatNewLine = "@strpd = constant [4 x i8] c\"%f\\0A\\00\"\n";
-
     static {
-        headerText += declarePrintf;
-        headerText += declareScanf;
-        headerText += printIntegerNewLine;
-        headerText += printFloatNewLine;
+        headerText += LLVMConstants.declarePrintf;
+        headerText += LLVMConstants.declareScanf;
+        headerText += LLVMConstants.printIntegerNewLine;
+        headerText += LLVMConstants.printFloatNewLine;
+        headerText += LLVMConstants.declareMalloc;
+        headerText += LLVMConstants.declareStrcpy;
+        headerText += LLVMConstants.declareRealloc;
+        headerText += LLVMConstants.declareStrlen;
     }
 
     public static void printfString(String string) {
@@ -136,5 +132,74 @@ public class LLVMGenerator {
     public static void loadDouble(String id) {
         mainText += "\t%" + reg + " = load double, double* %" + id + "\n";
         reg++;
+    }
+
+    public static void declareAndAssignString(String variableName, String stringValue) {
+        String funcName = "@str-" + reg;
+        headerText += funcName + " = private unnamed_addr constant [" + (stringValue.length() + 1) + " x i8] c\"" + stringValue + "\\00\"\n";
+
+        // char *string;
+        mainText += "\t%" + reg + " = alloca i32\n";
+        reg++;
+        mainText += "\t%" + variableName + " = alloca i8*\n";
+        mainText += "\tstore i32 0, i32* %" + (reg - 1) + "\n";
+        //reg++;
+
+        // string = (char *) malloc((6+1)*sizeof(char));
+        mainText += "\t%" + reg + " = call noalias i8* @malloc(i64 " + (stringValue.length() + 1) + ")\n";
+        mainText += "\tstore i8* %" + reg + ", i8** %" + variableName + "\n";
+        reg++;
+
+        // strcpy(string, "string");
+        mainText += "\t%" + reg + " = load i8*, i8** %" + variableName + "\n";
+        reg++;
+        mainText += "\t%" + reg + " = call i8* @strcpy(i8* %" + (reg - 1) + ", i8* getelementptr inbounds ([" + (stringValue.length() + 1) + " x i8], [" + (stringValue.length() + 1) + " x i8]* " + funcName + ", i64 0, i64 0))\n";
+        reg++;
+    }
+
+    public static void printfStringByVariableName(String variableName) {
+        String functName = "@str-" + reg;
+
+        headerText += functName + " = private unnamed_addr constant [4 x i8] c\"%s\\0A\\00\"\n";
+        mainText += "\t%" + reg + " = load i8*, i8** %" + variableName + "\n";
+        reg++;
+        mainText += "\t%" + reg + " = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* " + functName + ", i64 0, i64 0), i8* %" + (reg - 1) + ")\n";
+        reg++;
+    }
+
+    public static void reasignString(String variableName, String stringValue) {
+        String funcName = "@str-" + reg;
+        headerText += funcName + " = private unnamed_addr constant [" + (stringValue.length() + 1) + " x i8] c\"" + stringValue + "\\00\"\n";
+
+        // if(strlen(string)<(7+1))
+        mainText += "\t%" + reg + " = load i8*, i8** %" + variableName + "\n";
+        reg++;
+        mainText += "\t%" + reg + " = call i64 @strlen(i8* %" + (reg - 1) + ")\n";
+        reg++;
+        mainText += "\t%" + reg + " = icmp ult i64 %" + (reg - 1) + ", " + (stringValue.length() + 1) + "\n";
+        reg++;
+        mainText += "\tbr i1 %" + (reg - 1) + ", label %" + reg + ", label %" + (reg + 3) + "\n";
+
+        int pred = reg;
+
+        // string3 = (char *) realloc(string3, (6+1)*sizeof(char));
+        mainText += "\t" + pred + ":                                                ; preds = %0\n";
+        reg++;
+        mainText += "\t\t%" + reg + " = load i8*, i8** %" + variableName + "\n";
+        reg++;
+        mainText += "\t\t%" + reg + " = call i8* @realloc(i8* %" + (reg - 1) + ", i64 " + (stringValue.length() + 1) + ")\n";
+        reg++;
+        mainText += "\t\tstore i8* %" + (reg - 1) + ", i8** %" + variableName + "\n";
+        mainText += "\t\tbr label %" + reg + "\n";
+
+        // strcpy(string, "string2");
+        mainText += "\t" + reg + ":                                               ; preds = %" + pred + ", %0\n";
+        reg++;
+        mainText += "\t\t%" + reg + " = load i8*, i8** %" + variableName + "\n";
+        reg++;
+        mainText += "\t\t%" + reg + " = call i8* @strcpy(i8* %" + (reg - 1) + ", i8* getelementptr inbounds ([" + (stringValue.length() + 1) + " x i8], [" + (stringValue.length() + 1) + " x i8]* " + funcName + ", i64 0, i64 0))\n";
+        reg++;
+
+
     }
 }

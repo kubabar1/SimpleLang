@@ -17,7 +17,7 @@ public class ProgramListener extends org.simplelang.SimpleLangBaseListener {
 
     @Override
     public void exitProgram(org.simplelang.SimpleLangParser.ProgramContext ctx) {
-        try (PrintWriter out = new PrintWriter(FilenameUtils.removeExtension("test.xml") + ".ll")) {
+        try (PrintWriter out = new PrintWriter(FilenameUtils.removeExtension(inputFile.getName()) + ".ll")) {
             out.println(LLVMGenerator.generate());
         } catch (FileNotFoundException e) {
             System.err.println("Error during writing compiled code to file");

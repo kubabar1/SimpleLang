@@ -3,6 +3,7 @@ package org.simplelang.listener.functions;
 import org.simplelang.SimpleLangParser;
 import org.simplelang.error.ErrorMessages;
 import org.simplelang.listener.container.VariablesContainer;
+import org.simplelang.listener.container.base.Value;
 import org.simplelang.listener.container.base.VariableType;
 import org.simplelang.llvm.LLVMGenerator;
 
@@ -16,7 +17,12 @@ public class BuildInFunctionsHandler {
         } else if (!ctx.literal().isEmpty()) {
             printLiteral(ctx);
         } else if (!ctx.expression().isEmpty()) {
-            // TODO
+            Value value = VariablesContainer.getInstance().popFromStack();
+            if (value.getType().equals(VariableType.INT)) {
+                LLVMGenerator.printfI32(value.getName());
+            } else if (value.getType().equals(VariableType.FLOAT)) {
+                LLVMGenerator.printfDouble(value.getName());
+            }
         }
     }
 
@@ -83,6 +89,8 @@ public class BuildInFunctionsHandler {
                 LLVMGenerator.printfI32FromVariable(variableName);
             } else if (type.equals(VariableType.FLOAT)) {
                 LLVMGenerator.printfDoubleFromVariable(variableName);
+            } else if (type.equals(VariableType.STRING)) {
+                LLVMGenerator.printfStringByVariableName(variableName);
             }
         } else {
             ErrorMessages.error(ctx.getStart().getLine(), "unknown variable " + variableName);

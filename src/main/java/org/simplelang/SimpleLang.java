@@ -24,7 +24,6 @@ public class SimpleLang {
             parser.addParseListener(new ProgramListener(inputFile));
             parser.addParseListener(new FunctionListener());
             parser.addParseListener(new ExpressionListener());
-            parser.addParseListener(new LiteralListener());
             parser.addParseListener(new AssignmentListener());
             parser.addParseListener(new CastingListener());
             parser.program();

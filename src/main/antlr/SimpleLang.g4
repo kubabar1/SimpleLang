@@ -14,7 +14,7 @@ statement
     ;
 
 assignment
-    : VARIABLE_NAME ASSIGN (literal | expression)
+    : VARIABLE_NAME ASSIGN ( expression | literal )
     ;
 
 expression
@@ -133,7 +133,6 @@ POW: '^';
 
 // Constants
 PI: 'pi';
-E: ('e' | 'E');
 
 
 // Literals
@@ -141,7 +140,7 @@ FloatingPointLiteral: Digit+ DOT Digit+;
 
 IntegerLiteral: Digit+;
 
-ScientificNumberLiteral: E (PLUS | MINUS)? Digit+;
+ScientificNumberLiteral: ('e' | 'E') (PLUS | MINUS)? Digit+;
 
 BooleanLiteral
     : 'true'

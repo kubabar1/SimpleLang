@@ -29,8 +29,6 @@ public class ExpressionListener extends org.simplelang.SimpleLangBaseListener {
         if (Objects.nonNull(ctx.add()) && !ctx.add().isEmpty()) {
             Value v1 = VariablesContainer.getInstance().popFromStack();
             Value v2 = VariablesContainer.getInstance().popFromStack();
-            System.out.println(v1);
-            System.out.println(v2);
             validateValuesType(v1, v2, ctx);
             addValues(v1, v2);
         } else if (Objects.nonNull(ctx.subtract()) && !ctx.subtract().isEmpty()) {
@@ -72,7 +70,13 @@ public class ExpressionListener extends org.simplelang.SimpleLangBaseListener {
     }
 
     private void subtractValues(Value v1, Value v2) {
-
+        if (v1.getType().equals(VariableType.INT)) {
+            LLVMGenerator.subI32(v1.getName(), v2.getName());
+            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGenerator.reg - 1), VariableType.INT));
+        } else if (v1.getType().equals(VariableType.FLOAT)) {
+            LLVMGenerator.subDouble(v1.getName(), v2.getName());
+            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGenerator.reg - 1), VariableType.FLOAT));
+        }
     }
 
     public void multiplyValues(Value v1, Value v2) {
@@ -86,7 +90,13 @@ public class ExpressionListener extends org.simplelang.SimpleLangBaseListener {
     }
 
     public void divideValues(Value v1, Value v2) {
-
+        if (v1.getType().equals(VariableType.INT)) {
+            LLVMGenerator.divI32(v1.getName(), v2.getName());
+            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGenerator.reg - 1), VariableType.INT));
+        } else if (v1.getType().equals(VariableType.FLOAT)) {
+            LLVMGenerator.divDouble(v1.getName(), v2.getName());
+            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGenerator.reg - 1), VariableType.FLOAT));
+        }
     }
 
     public void powValues(Value v1, Value v2) {

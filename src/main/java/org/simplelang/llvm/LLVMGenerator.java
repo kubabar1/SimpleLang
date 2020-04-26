@@ -78,6 +78,16 @@ public class LLVMGenerator {
         reg++;
     }
 
+    public static void subI32(String val1, String val2) {
+        mainText += "\t%" + reg + " = sub i32 " + val2 + ", " + val1 + "\n";
+        reg++;
+    }
+
+    public static void subDouble(String val1, String val2) {
+        mainText += "\t%" + reg + " = fsub double " + val2 + ", " + val1 + "\n";
+        reg++;
+    }
+
     public static void multI32(String val1, String val2) {
         mainText += "\t%" + reg + " = mul i32 " + val1 + ", " + val2 + "\n";
         reg++;
@@ -85,6 +95,16 @@ public class LLVMGenerator {
 
     public static void multDouble(String val1, String val2) {
         mainText += "\t%" + reg + " = fmul double " + val1 + ", " + val2 + "\n";
+        reg++;
+    }
+
+    public static void divI32(String val1, String val2) {
+        mainText += "\t%" + reg + " = sdiv i32 " + val2 + ", " + val1 + "\n";
+        reg++;
+    }
+
+    public static void divDouble(String val1, String val2) {
+        mainText += "\t%" + reg + " = fdiv double " + val2 + ", " + val1 + "\n";
         reg++;
     }
 
@@ -117,5 +137,4 @@ public class LLVMGenerator {
         mainText += "\t%" + reg + " = load double, double* %" + id + "\n";
         reg++;
     }
-
 }

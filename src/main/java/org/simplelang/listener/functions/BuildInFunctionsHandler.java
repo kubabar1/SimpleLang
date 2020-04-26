@@ -50,27 +50,22 @@ public class BuildInFunctionsHandler {
             ErrorMessages.error(ctx.getStart().getLine(), "Invalid number of arguments");
         }
 
-        if (ctx.literal().isEmpty()) {
-            System.out.println("test");
-            LLVMGenerator.printfString("");
-        } else {
-            SimpleLangParser.LiteralContext literalContext = ctx.literal().get(0);
+        SimpleLangParser.LiteralContext literalContext = ctx.literal().get(0);
 
-            if (Objects.nonNull(literalContext.StringLiteral())) {
-                String stringValue = literalContext.StringLiteral().getText();
-                LLVMGenerator.printfString(stringValue.substring(1, stringValue.length() - 1));
-            } else if (Objects.nonNull(literalContext.BooleanLiteral())) {
-                LLVMGenerator.printfString(literalContext.BooleanLiteral().getText());
-            } else if (Objects.nonNull(literalContext.NullLiteral())) {
-                LLVMGenerator.printfString(literalContext.NullLiteral().getText());
-            } else if (Objects.nonNull(literalContext.numberLiteral())) {
-                if (Objects.nonNull(literalContext.numberLiteral().IntegerLiteral())) {
-                    LLVMGenerator.printfI32(literalContext.numberLiteral().IntegerLiteral().getText());
-                } else if (Objects.nonNull(literalContext.numberLiteral().FloatingPointLiteral())) {
-                    LLVMGenerator.printfDouble(literalContext.numberLiteral().FloatingPointLiteral().getText());
-                } else if (Objects.nonNull(literalContext.numberLiteral().ScientificNumberLiteral())) {
-                    // TODO
-                }
+        if (Objects.nonNull(literalContext.StringLiteral())) {
+            String stringValue = literalContext.StringLiteral().getText();
+            LLVMGenerator.printfString(stringValue.substring(1, stringValue.length() - 1));
+        } else if (Objects.nonNull(literalContext.BooleanLiteral())) {
+            LLVMGenerator.printfString(literalContext.BooleanLiteral().getText());
+        } else if (Objects.nonNull(literalContext.NullLiteral())) {
+            LLVMGenerator.printfString(literalContext.NullLiteral().getText());
+        } else if (Objects.nonNull(literalContext.numberLiteral())) {
+            if (Objects.nonNull(literalContext.numberLiteral().IntegerLiteral())) {
+                LLVMGenerator.printfI32(literalContext.numberLiteral().IntegerLiteral().getText());
+            } else if (Objects.nonNull(literalContext.numberLiteral().FloatingPointLiteral())) {
+                LLVMGenerator.printfDouble(literalContext.numberLiteral().FloatingPointLiteral().getText());
+            } else if (Objects.nonNull(literalContext.numberLiteral().ScientificNumberLiteral())) {
+                // TODO
             }
         }
     }

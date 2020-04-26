@@ -18,22 +18,25 @@ assignment
     ;
 
 expression
-    : multiplyingExpression ((add | subtract) multiplyingExpression)*
+    : multiplyingExpression
+    | expression (add | subtract) expression
     ;
 
 multiplyingExpression
-    : powExpression ((multiply | divide) powExpression)*
+    : powExpression
+    | multiplyingExpression (multiply | divide) multiplyingExpression
     ;
 
 powExpression
-   : atomExpression (POW atomExpression)*
+   : atomExpression
+   | powExpression pow powExpression
    ;
 
 atomExpression
    : atom
-   | (PLUS | MINUS) atom
    | functionInvocation
    ;
+//  | (PLUS | MINUS) atom
 
 atom
     : numberLiteral
@@ -89,6 +92,8 @@ subtract: MINUS;
 multiply: MULTIPLY;
 
 divide: DIVIDE;
+
+pow: POW;
 
 /*
  * Lexer Rules

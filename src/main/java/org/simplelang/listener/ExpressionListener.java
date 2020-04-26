@@ -26,14 +26,14 @@ public class ExpressionListener extends org.simplelang.SimpleLangBaseListener {
 
     @Override
     public void exitExpression(SimpleLangParser.ExpressionContext ctx) {
-        if (!ctx.add().isEmpty()) {
+        if (Objects.nonNull(ctx.add()) && !ctx.add().isEmpty()) {
             Value v1 = VariablesContainer.getInstance().popFromStack();
             Value v2 = VariablesContainer.getInstance().popFromStack();
             System.out.println(v1);
             System.out.println(v2);
             validateValuesType(v1, v2, ctx);
             addValues(v1, v2);
-        } else if (!ctx.subtract().isEmpty()) {
+        } else if (Objects.nonNull(ctx.subtract()) && !ctx.subtract().isEmpty()) {
             Value v1 = VariablesContainer.getInstance().popFromStack();
             Value v2 = VariablesContainer.getInstance().popFromStack();
             validateValuesType(v1, v2, ctx);
@@ -43,12 +43,12 @@ public class ExpressionListener extends org.simplelang.SimpleLangBaseListener {
 
     @Override
     public void exitMultiplyingExpression(SimpleLangParser.MultiplyingExpressionContext ctx) {
-        if (!ctx.multiply().isEmpty()) {
+        if (Objects.nonNull(ctx.multiply()) && !ctx.multiply().isEmpty()) {
             Value v1 = VariablesContainer.getInstance().popFromStack();
             Value v2 = VariablesContainer.getInstance().popFromStack();
             validateValuesType(v1, v2, ctx);
             multiplyValues(v1, v2);
-        } else if (!ctx.divide().isEmpty()) {
+        } else if (Objects.nonNull(ctx.divide()) && !ctx.divide().isEmpty()) {
             Value v1 = VariablesContainer.getInstance().popFromStack();
             Value v2 = VariablesContainer.getInstance().popFromStack();
             validateValuesType(v1, v2, ctx);

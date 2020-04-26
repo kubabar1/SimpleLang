@@ -103,7 +103,7 @@ public class LLVMGenerator {
         stringBuilder.append(headerText)
                 .append("define i32 @main() nounwind{\n")
                 .append(mainText)
-                .append("ret i32 0 }\n");
+                .append("\tret i32 0 \n}\n");
 
         return stringBuilder.toString();
     }

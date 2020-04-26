@@ -18,11 +18,11 @@ assignment
     ;
 
 expression
-    : multiplyingExpression ((PLUS | MINUS) multiplyingExpression)*
+    : multiplyingExpression ((add | subtract) multiplyingExpression)*
     ;
 
 multiplyingExpression
-    : powExpression ((MULTIPLY | DIVIDE) powExpression)*
+    : powExpression ((multiply | divide) powExpression)*
     ;
 
 powExpression
@@ -43,7 +43,7 @@ atom
     | LROUNDBRACKET expression RROUNDBRACKET
     ;
 
-functionInvocation: buildInFunction LROUNDBRACKET (literal | expression) (COMMA (literal | expression))* RROUNDBRACKET;
+functionInvocation: buildInFunction LROUNDBRACKET (literal | variable | expression) (COMMA (literal | variable | expression))* RROUNDBRACKET;
 
 variable: VARIABLE_NAME;
 
@@ -76,15 +76,19 @@ toFloatCasting: LROUNDBRACKET FLOAT RROUNDBRACKET;
 buildInFunction
     : PRINT
     | READ
-    | COS
     | SIN
+    | COS
     | TAN
     | CTG
     ;
 
-// plus: PLUS;
+add: PLUS;
 
-// multiply: MULTIPLY;
+subtract: MINUS;
+
+multiply: MULTIPLY;
+
+divide: DIVIDE;
 
 /*
  * Lexer Rules
@@ -139,7 +143,7 @@ BooleanLiteral
     | 'false'
     ;
 
-StringLiteral: '"' ( ~('\\'|'"') )* '"';
+StringLiteral: '"' StringText '"';
 
 NullLiteral: 'null';
 
@@ -153,6 +157,8 @@ fragment LetterOrDigit
     : Letter
     | [0-9]
     ;
+
+fragment StringText: ( ~('\\'|'"') )*;
 
 VARIABLE_NAME: [_]*[A-Za-z][A-Za-z0-9_]*;
 

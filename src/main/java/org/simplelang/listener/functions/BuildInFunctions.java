@@ -1,8 +1,12 @@
-package org.simplelang;
+package org.simplelang.listener.functions;
 
 public enum BuildInFunctions {
     PRINT("print"),
-    READ("read");
+    READ("read"),
+    SIN("sin"),
+    COS("cos"),
+    TAN("tan"),
+    CTG("ctg");
 
     private final String name;
 

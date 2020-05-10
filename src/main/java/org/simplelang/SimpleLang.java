@@ -1,8 +1,7 @@
 package org.simplelang;
 
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.*;
+import org.simplelang.error.SimpleLangErrorListener;
 import org.simplelang.listener.*;
 
 import java.io.File;
@@ -26,6 +25,7 @@ public class SimpleLang {
             parser.addParseListener(new ExpressionListener());
             parser.addParseListener(new AssignmentListener());
             parser.addParseListener(new CastingListener());
+            parser.addErrorListener(new SimpleLangErrorListener());
             parser.program();
         } catch (IOException ex) {
             Logger.getLogger(SimpleLang.class.getName()).log(Level.SEVERE, null, ex);

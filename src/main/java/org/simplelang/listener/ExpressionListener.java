@@ -6,7 +6,8 @@ import org.simplelang.error.ErrorMessages;
 import org.simplelang.listener.container.VariablesContainer;
 import org.simplelang.listener.container.base.Value;
 import org.simplelang.listener.container.base.VariableType;
-import org.simplelang.llvm.LLVMGenerator;
+import org.simplelang.llvm.LLVMGeneratorBase;
+import org.simplelang.llvm.expression.LLVMGeneratorExpression;
 
 import java.util.Objects;
 
@@ -61,41 +62,41 @@ public class ExpressionListener extends org.simplelang.SimpleLangBaseListener {
 
     public void addValues(Value v1, Value v2) {
         if (v1.getType().equals(VariableType.INT)) {
-            LLVMGenerator.addI32(v1.getName(), v2.getName());
-            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGenerator.reg - 1), VariableType.INT));
+            LLVMGeneratorExpression.addInteger(v1.getName(), v2.getName());
+            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGeneratorBase.reg - 1), VariableType.INT));
         } else if (v1.getType().equals(VariableType.FLOAT)) {
-            LLVMGenerator.addDouble(v1.getName(), v2.getName());
-            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGenerator.reg - 1), VariableType.FLOAT));
+            LLVMGeneratorExpression.addDouble(v1.getName(), v2.getName());
+            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGeneratorBase.reg - 1), VariableType.FLOAT));
         }
     }
 
     private void subtractValues(Value v1, Value v2) {
         if (v1.getType().equals(VariableType.INT)) {
-            LLVMGenerator.subI32(v1.getName(), v2.getName());
-            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGenerator.reg - 1), VariableType.INT));
+            LLVMGeneratorExpression.subInteger(v1.getName(), v2.getName());
+            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGeneratorBase.reg - 1), VariableType.INT));
         } else if (v1.getType().equals(VariableType.FLOAT)) {
-            LLVMGenerator.subDouble(v1.getName(), v2.getName());
-            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGenerator.reg - 1), VariableType.FLOAT));
+            LLVMGeneratorExpression.subDouble(v1.getName(), v2.getName());
+            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGeneratorBase.reg - 1), VariableType.FLOAT));
         }
     }
 
     public void multiplyValues(Value v1, Value v2) {
         if (v1.getType().equals(VariableType.INT)) {
-            LLVMGenerator.multI32(v1.getName(), v2.getName());
-            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGenerator.reg - 1), VariableType.INT));
+            LLVMGeneratorExpression.multInteger(v1.getName(), v2.getName());
+            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGeneratorBase.reg - 1), VariableType.INT));
         } else if (v1.getType().equals(VariableType.FLOAT)) {
-            LLVMGenerator.multDouble(v1.getName(), v2.getName());
-            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGenerator.reg - 1), VariableType.FLOAT));
+            LLVMGeneratorExpression.multDouble(v1.getName(), v2.getName());
+            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGeneratorBase.reg - 1), VariableType.FLOAT));
         }
     }
 
     public void divideValues(Value v1, Value v2) {
         if (v1.getType().equals(VariableType.INT)) {
-            LLVMGenerator.divI32(v1.getName(), v2.getName());
-            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGenerator.reg - 1), VariableType.INT));
+            LLVMGeneratorExpression.divInteger(v1.getName(), v2.getName());
+            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGeneratorBase.reg - 1), VariableType.INT));
         } else if (v1.getType().equals(VariableType.FLOAT)) {
-            LLVMGenerator.divDouble(v1.getName(), v2.getName());
-            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGenerator.reg - 1), VariableType.FLOAT));
+            LLVMGeneratorExpression.divDouble(v1.getName(), v2.getName());
+            VariablesContainer.getInstance().pushToStack(new Value("%" + (LLVMGeneratorBase.reg - 1), VariableType.FLOAT));
         }
     }
 

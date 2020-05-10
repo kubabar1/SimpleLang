@@ -1,7 +1,7 @@
 package org.simplelang.listener;
 
 import org.apache.commons.io.FilenameUtils;
-import org.simplelang.llvm.LLVMGenerator;
+import org.simplelang.llvm.LLVMGeneratorBase;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,7 +18,7 @@ public class ProgramListener extends org.simplelang.SimpleLangBaseListener {
     @Override
     public void exitProgram(org.simplelang.SimpleLangParser.ProgramContext ctx) {
         try (PrintWriter out = new PrintWriter(FilenameUtils.removeExtension(inputFile.getName()) + ".ll")) {
-            out.println(LLVMGenerator.generate());
+            out.println(LLVMGeneratorBase.generate());
         } catch (FileNotFoundException e) {
             System.err.println("Error during writing compiled code to file");
         }

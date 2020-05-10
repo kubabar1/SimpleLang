@@ -5,5 +5,6 @@ public enum VariableType {
     FLOAT,
     BOOLEAN,
     STRING,
+    ARRAY,
     NULL
 }

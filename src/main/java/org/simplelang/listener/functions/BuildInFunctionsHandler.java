@@ -5,7 +5,8 @@ import org.simplelang.error.ErrorMessages;
 import org.simplelang.listener.container.VariablesContainer;
 import org.simplelang.listener.container.base.Value;
 import org.simplelang.listener.container.base.VariableType;
-import org.simplelang.llvm.LLVMGenerator;
+import org.simplelang.llvm.io.LLVMGeneratorIO;
+import org.simplelang.llvm.string.LLVMGeneratorString;
 
 import java.util.Objects;
 
@@ -19,9 +20,9 @@ public class BuildInFunctionsHandler {
         } else if (!ctx.expression().isEmpty()) {
             Value value = VariablesContainer.getInstance().popFromStack();
             if (value.getType().equals(VariableType.INT)) {
-                LLVMGenerator.printfI32(value.getName());
+                LLVMGeneratorIO.printlnInteger(value.getName());
             } else if (value.getType().equals(VariableType.FLOAT)) {
-                LLVMGenerator.printfDouble(value.getName());
+                LLVMGeneratorIO.printlnDouble(value.getName());
             }
         }
     }
@@ -32,12 +33,11 @@ public class BuildInFunctionsHandler {
                 ErrorMessages.error(ctx.getStart().getLine(), "Incorrect number of arguments");
             }
             String variableName = ctx.variable().get(0).getText();
-            System.out.println(VariablesContainer.getInstance().variableExists(variableName));
             if (VariablesContainer.getInstance().variableExists(variableName)) {
                 ErrorMessages.error(ctx.getStart().getLine(), "Cannot read to existing variable");
             } else {
                 VariablesContainer.getInstance().putVariable(variableName, VariableType.STRING);
-                LLVMGenerator.scanf(variableName);
+                LLVMGeneratorIO.scanf(variableName);
             }
         } else {
             ErrorMessages.error(ctx.getStart().getLine(), "Read function accept only variable as argument");
@@ -69,16 +69,16 @@ public class BuildInFunctionsHandler {
 
         if (Objects.nonNull(literalContext.StringLiteral())) {
             String stringValue = literalContext.StringLiteral().getText();
-            LLVMGenerator.printfString(stringValue.substring(1, stringValue.length() - 1));
+            LLVMGeneratorString.printlnString(stringValue.substring(1, stringValue.length() - 1));
         } else if (Objects.nonNull(literalContext.BooleanLiteral())) {
-            LLVMGenerator.printfString(literalContext.BooleanLiteral().getText());
+            LLVMGeneratorString.printlnString(literalContext.BooleanLiteral().getText());
         } else if (Objects.nonNull(literalContext.NullLiteral())) {
-            LLVMGenerator.printfString(literalContext.NullLiteral().getText());
+            LLVMGeneratorString.printlnString(literalContext.NullLiteral().getText());
         } else if (Objects.nonNull(literalContext.numberLiteral())) {
             if (Objects.nonNull(literalContext.numberLiteral().IntegerLiteral())) {
-                LLVMGenerator.printfI32(literalContext.numberLiteral().IntegerLiteral().getText());
+                LLVMGeneratorIO.printlnInteger(literalContext.numberLiteral().IntegerLiteral().getText());
             } else if (Objects.nonNull(literalContext.numberLiteral().FloatingPointLiteral())) {
-                LLVMGenerator.printfDouble(literalContext.numberLiteral().FloatingPointLiteral().getText());
+                LLVMGeneratorIO.printlnDouble(literalContext.numberLiteral().FloatingPointLiteral().getText());
             } else if (Objects.nonNull(literalContext.numberLiteral().ScientificNumberLiteral())) {
                 // TODO
             }
@@ -95,11 +95,11 @@ public class BuildInFunctionsHandler {
 
         if (Objects.nonNull(type)) {
             if (type.equals(VariableType.INT)) {
-                LLVMGenerator.printfI32FromVariable(variableName);
+                LLVMGeneratorIO.printlnIntegerFromVariable(variableName);
             } else if (type.equals(VariableType.FLOAT)) {
-                LLVMGenerator.printfDoubleFromVariable(variableName);
+                LLVMGeneratorIO.printfDoubleFromVariable(variableName);
             } else if (type.equals(VariableType.STRING)) {
-                LLVMGenerator.printfStringByVariableName(variableName);
+                LLVMGeneratorString.printlnStringByVariableName(variableName);
             }
         } else {
             ErrorMessages.error(ctx.getStart().getLine(), "unknown variable " + variableName);

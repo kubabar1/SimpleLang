@@ -14,7 +14,7 @@ statement
     ;
 
 assignment
-    : VARIABLE_NAME ASSIGN ( expression | literal )
+    : VARIABLE_NAME ASSIGN ( expression | literal | array)
     ;
 
 expression
@@ -49,6 +49,8 @@ atom
 functionInvocation: buildInFunction LROUNDBRACKET (literal | variable | expression) (COMMA (literal | variable | expression))* RROUNDBRACKET;
 
 variable: VARIABLE_NAME;
+
+array: LSQUAREBRACKET (literal (COMMA literal)*)? RSQUAREBRACKET;
 
 casting
     : toIntCasting

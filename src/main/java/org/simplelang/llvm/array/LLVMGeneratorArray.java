@@ -3,16 +3,16 @@ package org.simplelang.llvm.array;
 import org.simplelang.listener.container.base.VariableType;
 import org.simplelang.llvm.LLVMGeneratorBase;
 
-public interface LLVMGeneratorArray {
+public class LLVMGeneratorArray {
 
-    static void declareArray(String variableName, int arraySize) {
+    public static void declareArray(String variableName, int arraySize) {
         LLVMGeneratorBase.mainText += "\t%" + LLVMGeneratorBase.reg + " = alloca i32\n";
         LLVMGeneratorBase.reg++;
         LLVMGeneratorBase.mainText += "\t%" + variableName + " = alloca [" + arraySize + " x i32], align 16\n";
         LLVMGeneratorBase.mainText += "\tstore i32 0, i32* %" + (LLVMGeneratorBase.reg - 1) + "\n";
     }
 
-    static void assignArray(String variableName, String[] array, VariableType variableType) {
+    public static void assignArray(String variableName, String[] array, VariableType variableType) {
         String functName = "@__const.main.a-" + LLVMGeneratorBase.reg;
         if (variableType.equals(VariableType.INT)) {
             LLVMGeneratorBase.headerText += functName + " = private unnamed_addr constant [" + array.length + " x i32] " + getIntegerArrayAsignString(array) + ", align 16\n";
@@ -24,7 +24,7 @@ public interface LLVMGeneratorArray {
         }
     }
 
-    static String getIntegerArrayAsignString(String[] array) {
+    public static String getIntegerArrayAsignString(String[] array) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("[");
 

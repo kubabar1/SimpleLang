@@ -17,12 +17,15 @@ public class VariablesContainer implements Serializable, Cloneable {
 
     private Stack<Value> stack;
 
+    private Stack<Integer> brstack;
+
     private VariablesContainer() {
         if (instance != null) {
             throw new IllegalStateException("Cannot create new instance, please use getInstance method instead.");
         }
         this.variables = new HashMap<>();
         this.stack = new Stack<>();
+        this.brstack = new Stack<>();
     }
 
     public synchronized static VariablesContainer getInstance() {
@@ -38,6 +41,14 @@ public class VariablesContainer implements Serializable, Cloneable {
 
     public Value popFromStack() {
         return this.stack.pop();
+    }
+
+    public void pushToBrStack(Integer value) {
+        this.brstack.push(value);
+    }
+
+    public Integer popFromBrStack() {
+        return this.brstack.pop();
     }
 
     public void putVariable(String variableName, VariableType variableType) {

@@ -26,6 +26,8 @@ public abstract class LLVMGeneratorBase {
 
     public static int reg = 1;
 
+    public static int br = 0;
+
     public static int methodReg = 1;
 
     static {

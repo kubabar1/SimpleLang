@@ -26,3 +26,27 @@ tab2 = [1,2,3,4]
 
 read(q)
 print(q)
+
+if(3>2) {
+    print("test1")
+}
+
+if(3.14>2.2) {
+    print("test2")
+}
+
+j = 4
+
+if(3!=j) {
+    print("test3")
+}
+
+if(j>=1) {
+    print("test4")
+}
+
+l = 4
+
+if(j==l) {
+    print("test5")
+}

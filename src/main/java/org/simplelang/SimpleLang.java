@@ -25,6 +25,7 @@ public class SimpleLang {
             parser.addParseListener(new ExpressionListener());
             parser.addParseListener(new AssignmentListener());
             parser.addParseListener(new CastingListener());
+            parser.addParseListener(new IfStatementListener());
             parser.addErrorListener(new SimpleLangErrorListener());
             parser.program();
         } catch (IOException ex) {

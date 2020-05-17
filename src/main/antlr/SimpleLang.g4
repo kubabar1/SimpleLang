@@ -11,6 +11,7 @@ program
 statement
     : assignment NEWLINE*
     | functionInvocation NEWLINE*
+    | ifStatement NEWLINE*
     ;
 
 assignment
@@ -46,7 +47,38 @@ atom
     | LROUNDBRACKET expression RROUNDBRACKET
     ;
 
+block: ( statement? NEWLINE )*;
+
 functionInvocation: buildInFunction LROUNDBRACKET (literal | variable | expression) (COMMA (literal | variable | expression))* RROUNDBRACKET;
+
+ifStatement: IF LROUNDBRACKET condition RROUNDBRACKET NEWLINE* LCURLYBRACKET blockif RCURLYBRACKET;
+
+blockif: block;
+
+condition
+    : BooleanLiteral
+    | variable
+    | leftStatement comparisonOperators rightStatement
+    ;
+
+leftStatement: comparisonStatement;
+
+rightStatement: comparisonStatement;
+
+comparisonStatement
+    : numberLiteral
+    | BooleanLiteral
+    | variable
+    ;
+
+comparisonOperators
+    : EQUAL
+    | NOT_EQUAL
+    | GREATER_OR_EQUAL_THAN
+    | GREATER_THAN
+    | LESS_OR_EQUAL_THAN
+    | LESS_THAN
+    ;
 
 variable: VARIABLE_NAME;
 
@@ -110,6 +142,7 @@ INT: 'int';
 FLOAT: 'float';
 TAN: 'tan';
 CTG: 'ctg';
+IF: 'if';
 
 
 // Separators
@@ -131,6 +164,15 @@ PLUS: '+';
 MINUS: '-';
 DIVIDE: '/';
 POW: '^';
+
+
+// Comparison operators
+EQUAL: '==';
+NOT_EQUAL: '!=';
+GREATER_THAN: '>';
+GREATER_OR_EQUAL_THAN: '>=';
+LESS_THAN: '<';
+LESS_OR_EQUAL_THAN: '<=';
 
 
 // Constants

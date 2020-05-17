@@ -12,9 +12,9 @@ import static org.simplelang.llvm.string.LLVMConstantsString.printlnStringByVari
 import static org.simplelang.llvm.string.LLVMConstantsString.declareAssignStringHeader;
 import static org.simplelang.llvm.string.LLVMConstantsString.strcpyString;
 
-public interface LLVMGeneratorString {
+public class LLVMGeneratorString {
 
-    static void printlnString(String string) {
+    public static void printlnString(String string) {
         int textLength = string.length() + 2;
         String methodName = methodNamePrefix + methodReg;
         headerText += printlnStringHeader.apply(methodName, string, textLength);
@@ -23,7 +23,7 @@ public interface LLVMGeneratorString {
         reg++;
     }
 
-    static void printlnStringByVariableName(String variableName) {
+    public static void printlnStringByVariableName(String variableName) {
         String methodName = methodNamePrefix + methodReg;
         headerText += printlnStringByVariableHeader.apply(methodName);
         methodReg++;
@@ -34,7 +34,7 @@ public interface LLVMGeneratorString {
     }
 
 
-    static void declareAndAssignString(String variableName, String stringValue) {
+    public static void declareAndAssignString(String variableName, String stringValue) {
         String methodName = methodNamePrefix + methodReg;
         headerText += declareAssignStringHeader.apply(methodName, stringValue, stringValue.length() + 1);
         methodReg++;
@@ -58,7 +58,7 @@ public interface LLVMGeneratorString {
     }
 
 
-    static void reasignString(String variableName, String stringValue) {
+    public static void reasignString(String variableName, String stringValue) {
         String methodName = methodNamePrefix + methodReg;
         headerText += declareAssignStringHeader.apply(methodName, stringValue, stringValue.length() + 1);
         methodReg++;

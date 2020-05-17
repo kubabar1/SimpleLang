@@ -21,31 +21,31 @@ import static org.simplelang.llvm.io.LLVMConstantsIO.printlnIntegerFromVariable;
 import static org.simplelang.llvm.io.LLVMConstantsIO.printlnDoubleFromVariable;
 import static org.simplelang.llvm.io.LLVMConstantsIO.scanfHeader;
 
-public interface LLVMGeneratorIO {
+public class LLVMGeneratorIO {
 
-    static void printlnInteger(String number) {
+    public static void printlnInteger(String number) {
         mainText += printlnInteger.apply(reg, number);
         reg++;
     }
 
-    static void printlnDouble(String number) {
+    public static void printlnDouble(String number) {
         mainText += printlnDouble.apply(reg, number);
         reg++;
     }
 
-    static void printlnIntegerFromVariable(String id) {
+    public static void printlnIntegerFromVariable(String id) {
         loadInteger(id);
         mainText += printlnIntegerFromVariable.apply(reg, reg - 1);
         reg++;
     }
 
-    static void printfDoubleFromVariable(String id) {
+    public static void printfDoubleFromVariable(String id) {
         loadDouble(id);
         mainText += printlnDoubleFromVariable.apply(reg, reg - 1);
         reg++;
     }
 
-    static void scanf(String variableName) {
+    public static void scanf(String variableName) {
         String methodName = methodNamePrefix + methodReg;
         headerText += scanfHeader.apply(methodName);
         methodReg++;

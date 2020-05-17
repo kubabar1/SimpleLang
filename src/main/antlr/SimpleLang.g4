@@ -12,6 +12,7 @@ statement
     : assignment NEWLINE*
     | functionInvocation NEWLINE*
     | ifStatement NEWLINE*
+    | loopStatement NEWLINE*
     ;
 
 assignment
@@ -50,6 +51,10 @@ atom
 block: ( statement? NEWLINE )*;
 
 functionInvocation: buildInFunction LROUNDBRACKET (literal | variable | expression) (COMMA (literal | variable | expression))* RROUNDBRACKET;
+
+loopStatement: WHILE LROUNDBRACKET condition RROUNDBRACKET NEWLINE* LCURLYBRACKET blockLoop RCURLYBRACKET;
+
+blockLoop: block;
 
 ifStatement: IF LROUNDBRACKET condition RROUNDBRACKET NEWLINE* LCURLYBRACKET blockif RCURLYBRACKET;
 
@@ -143,7 +148,7 @@ FLOAT: 'float';
 TAN: 'tan';
 CTG: 'ctg';
 IF: 'if';
-
+WHILE: 'while';
 
 // Separators
 LCURLYBRACKET: '{';
@@ -206,7 +211,11 @@ fragment LetterOrDigit
     | [0-9]
     ;
 
-fragment StringText: ( ~('\\'|'"') )*;
+fragment StringText: ( EscapeSequence | ~[\\"]  )*;
+
+fragment EscapeSequence
+    :   '\\' [btnfr"'\\]
+    ;
 
 VARIABLE_NAME: [_]*[A-Za-z][A-Za-z0-9_]*;
 

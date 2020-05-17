@@ -1,0 +1,16 @@
+j = 4
+l = 4
+k = j + 2
+
+print(k)
+
+if(j==l){
+    print("If working!")
+}
+
+i=0
+
+while(i<10) {
+    print(i)
+    i = i + 1
+}

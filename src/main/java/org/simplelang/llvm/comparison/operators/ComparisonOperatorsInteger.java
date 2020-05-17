@@ -1,4 +1,4 @@
-package org.simplelang.llvm.if_stmt.comparison;
+package org.simplelang.llvm.comparison.operators;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,11 +11,11 @@ public enum ComparisonOperatorsInteger {
     LESS_OR_EQUAL_THAN("sle", "<="),
     LESS_THAN("slt", "<");
 
-    private static final Map<String, ComparisonOperatorsInteger> map;
-
     private final String name;
 
     private final String operator;
+
+    private static final Map<String, ComparisonOperatorsInteger> map;
 
     static {
         map = new HashMap<>();

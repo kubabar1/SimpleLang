@@ -1,6 +1,7 @@
 package org.simplelang;
 
 import org.antlr.v4.runtime.*;
+import org.graalvm.compiler.core.common.cfg.Loop;
 import org.simplelang.error.SimpleLangErrorListener;
 import org.simplelang.listener.*;
 
@@ -25,7 +26,9 @@ public class SimpleLang {
             parser.addParseListener(new ExpressionListener());
             parser.addParseListener(new AssignmentListener());
             parser.addParseListener(new CastingListener());
+            parser.addParseListener(new ConditionListener());
             parser.addParseListener(new IfStatementListener());
+            parser.addParseListener(new LoopListener());
             parser.addErrorListener(new SimpleLangErrorListener());
             parser.program();
         } catch (IOException ex) {

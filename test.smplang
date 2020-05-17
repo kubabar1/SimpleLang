@@ -48,5 +48,18 @@ if(j>=1) {
 l = 4
 
 if(j==l) {
+    print(l)
+    l=l+1
+    print(l+1)
+    print(l)
     print("test5")
+}
+
+it = 0
+
+while(it<10) {
+    print(it)
+    it = it + 1
+    print(it)
+    print("@@@@@@@@@@@@@@")
 }

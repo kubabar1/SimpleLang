@@ -17,7 +17,9 @@ public class VariablesContainer implements Serializable, Cloneable {
 
     private Stack<Value> stack;
 
-    private Stack<Integer> brstack;
+    private Stack<Integer> brIfStack;
+
+    private Stack<Integer> brLoopStack;
 
     private VariablesContainer() {
         if (instance != null) {
@@ -25,7 +27,8 @@ public class VariablesContainer implements Serializable, Cloneable {
         }
         this.variables = new HashMap<>();
         this.stack = new Stack<>();
-        this.brstack = new Stack<>();
+        this.brIfStack = new Stack<>();
+        this.brLoopStack = new Stack<>();
     }
 
     public synchronized static VariablesContainer getInstance() {
@@ -43,12 +46,20 @@ public class VariablesContainer implements Serializable, Cloneable {
         return this.stack.pop();
     }
 
-    public void pushToBrStack(Integer value) {
-        this.brstack.push(value);
+    public void pushToBrIfStack(Integer value) {
+        this.brIfStack.push(value);
     }
 
-    public Integer popFromBrStack() {
-        return this.brstack.pop();
+    public Integer popFromBrIfStack() {
+        return this.brIfStack.pop();
+    }
+
+    public void pushToBrLoopStack(Integer value) {
+        this.brLoopStack.push(value);
+    }
+
+    public Integer popFromBrLoopStack() {
+        return this.brLoopStack.pop();
     }
 
     public void putVariable(String variableName, VariableType variableType) {

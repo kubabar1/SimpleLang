@@ -15,11 +15,25 @@ import java.util.Objects;
 public class ExpressionListener extends org.simplelang.SimpleLangBaseListener {
 
     @Override
+    public void exitVariable(SimpleLangParser.VariableContext ctx) {
+        String variableName = ctx.VARIABLE_NAME().getText();
+        if (VariablesContainer.getInstance().variableExists(variableName)) {
+            VariableType variableType = VariablesContainer.getInstance().getVariableType(variableName);
+            VariablesContainer.getInstance().pushToStack(new Value("%" + LLVMGeneratorBase.reg, variableType)); // TODO: fix
+            if (VariableType.INT.equals(variableType)) {
+                LLVMGeneratorBase.loadInteger(variableName); // TODO: fix
+            } else if (VariableType.FLOAT.equals(variableType)) {
+                LLVMGeneratorBase.loadDouble(variableName); // TODO: fix
+            }
+        }
+    }
+
+    @Override
     public void exitNumberLiteral(SimpleLangParser.NumberLiteralContext ctx) {
         if (Objects.nonNull(ctx.IntegerLiteral())) {
-            VariablesContainer.getInstance().pushToStack(new Value(ctx.IntegerLiteral().getText(), VariableType.INT));
+            VariablesContainer.getInstance().pushToStack(new Value(ctx.IntegerLiteral().getText(), VariableType.INT)); // TODO: fix
         } else if (Objects.nonNull(ctx.FloatingPointLiteral())) {
-            VariablesContainer.getInstance().pushToStack(new Value(ctx.FloatingPointLiteral().getText(), VariableType.FLOAT));
+            VariablesContainer.getInstance().pushToStack(new Value(ctx.FloatingPointLiteral().getText(), VariableType.FLOAT)); // TODO: fix
         } else if (Objects.nonNull(ctx.ScientificNumberLiteral())) {
             // TODO
         }
@@ -57,7 +71,7 @@ public class ExpressionListener extends org.simplelang.SimpleLangBaseListener {
 
     @Override
     public void exitPowExpression(SimpleLangParser.PowExpressionContext ctx) {
-
+        // TODO: Add pow expression
     }
 
     public void addValues(Value v1, Value v2) {
@@ -106,7 +120,7 @@ public class ExpressionListener extends org.simplelang.SimpleLangBaseListener {
 
     private void validateValuesType(Value v1, Value v2, ParserRuleContext ctx) {
         if (!v1.getType().equals(v2.getType())) {
-            ErrorMessages.error(ctx.getStart().getLine(), "add type mismatch");
+            ErrorMessages.error(ctx.getStart().getLine(), " type mismatch");
         }
     }
 

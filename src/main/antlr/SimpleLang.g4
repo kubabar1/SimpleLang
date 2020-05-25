@@ -13,6 +13,7 @@ statement
     | functionInvocation NEWLINE*
     | ifStatement NEWLINE*
     | loopStatement NEWLINE*
+    | functionStatement NEWLINE*
     ;
 
 assignment
@@ -50,7 +51,21 @@ atom
 
 block: ( statement? NEWLINE )*;
 
-functionInvocation: buildInFunction LROUNDBRACKET (literal | variable | expression) (COMMA (literal | variable | expression))* RROUNDBRACKET;
+functionInvocation: (buildInFunction | functionInvocationName) LROUNDBRACKET functionInvocationParams RROUNDBRACKET;
+
+functionInvocationParams: (functionParam (COMMA functionParam)*)?;
+
+functionStatement: DEF functionName LROUNDBRACKET functionStatementParams RROUNDBRACKET NEWLINE* LCURLYBRACKET blockFunction RCURLYBRACKET;
+
+functionStatementParams: (functionParam (COMMA functionParam)*)?;
+
+functionParam
+    : literal
+    | variable
+    | expression
+    ;
+
+blockFunction: block;
 
 loopStatement: WHILE LROUNDBRACKET condition RROUNDBRACKET NEWLINE* LCURLYBRACKET blockLoop RCURLYBRACKET;
 
@@ -84,6 +99,10 @@ comparisonOperators
     | LESS_OR_EQUAL_THAN
     | LESS_THAN
     ;
+
+functionInvocationName: VARIABLE_NAME;
+
+functionName: VARIABLE_NAME;
 
 variable: VARIABLE_NAME;
 
@@ -149,6 +168,7 @@ TAN: 'tan';
 CTG: 'ctg';
 IF: 'if';
 WHILE: 'while';
+DEF: 'def';
 
 // Separators
 LCURLYBRACKET: '{';

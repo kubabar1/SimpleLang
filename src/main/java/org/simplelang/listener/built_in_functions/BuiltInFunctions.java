@@ -1,6 +1,6 @@
-package org.simplelang.listener.functions;
+package org.simplelang.listener.built_in_functions;
 
-public enum BuildInFunctions {
+public enum BuiltInFunctions {
     PRINT("print"),
     READ("read"),
     SIN("sin"),
@@ -10,7 +10,7 @@ public enum BuildInFunctions {
 
     private final String name;
 
-    BuildInFunctions(final String name) {
+    BuiltInFunctions(final String name) {
         this.name = name;
     }
 

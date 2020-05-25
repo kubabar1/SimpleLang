@@ -11,9 +11,6 @@ public class IfStatementPredicates {
     public static BiPredicate<ComparisonStatementContext, ComparisonStatementContext> numbersComparison = (leftStatement, rightStatement) ->
             Objects.nonNull(leftStatement.numberLiteral()) && Objects.nonNull(rightStatement.numberLiteral());
 
-    public static BiPredicate<ComparisonStatementContext, ComparisonStatementContext> integerVariablesComparison = (leftStatement, rightStatement) ->
-            Objects.nonNull(leftStatement.variable()) && Objects.nonNull(rightStatement.variable());
-
     public static BiPredicate<ComparisonStatementContext, ComparisonStatementContext> variablesComparison = (leftStatement, rightStatement) ->
             Objects.nonNull(leftStatement.variable()) && Objects.nonNull(rightStatement.variable());
 
@@ -36,8 +33,5 @@ public class IfStatementPredicates {
 
     public static Predicate<ComparisonStatementContext> isVariable = (statement) ->
             Objects.nonNull(statement.variable());
-
-    public static Predicate<ComparisonStatementContext> isBoolean = (statement) ->
-            Objects.nonNull(statement.BooleanLiteral());
 
 }

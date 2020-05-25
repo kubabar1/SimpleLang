@@ -1,6 +1,8 @@
 package org.simplelang.listener;
 
 import org.apache.commons.io.FilenameUtils;
+import org.simplelang.SimpleLangParser;
+import org.simplelang.listener.containers.BaseContainer;
 import org.simplelang.llvm.LLVMGeneratorBase;
 
 import java.io.File;
@@ -11,8 +13,17 @@ public class ProgramListener extends org.simplelang.SimpleLangBaseListener {
 
     private File inputFile;
 
+    private BaseContainer baseContainer;
+
     public ProgramListener(File inputFile) {
         this.inputFile = inputFile;
+        this.baseContainer = BaseContainer.getInstance();
+    }
+
+    @Override
+    public void enterProgram(SimpleLangParser.ProgramContext ctx) {
+        LLVMGeneratorBase.closeMain();
+        baseContainer.setGlobalTrue();
     }
 
     @Override

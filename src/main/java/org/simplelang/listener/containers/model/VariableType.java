@@ -1,8 +1,8 @@
-package org.simplelang.listener.container.base;
+package org.simplelang.listener.containers.model;
 
 public enum VariableType {
     INT,
-    FLOAT,
+    DOUBLE,
     BOOLEAN,
     STRING,
     ARRAY,

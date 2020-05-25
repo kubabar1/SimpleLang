@@ -13,7 +13,6 @@ print(c)
 print(d)
 print(f)
 print(54321)
-print(3 + 4)
 
 z = "test"
 print(z)

@@ -9,9 +9,8 @@ import static org.simplelang.llvm.LLVMConstantsBase.scanf;
 import static org.simplelang.llvm.LLVMConstantsBase.malloc;
 import static org.simplelang.llvm.LLVMConstantsBase.readBufferSize;
 import static org.simplelang.llvm.LLVMConstantsBase.assignI32;
-import static org.simplelang.llvm.LLVMGeneratorBase.mainText;
-import static org.simplelang.llvm.LLVMGeneratorBase.headerText;
-import static org.simplelang.llvm.LLVMGeneratorBase.reg;
+import static org.simplelang.llvm.LLVMGeneratorBase.tmp;
+import static org.simplelang.llvm.LLVMGeneratorBase.buffer;
 import static org.simplelang.llvm.LLVMGeneratorBase.methodReg;
 import static org.simplelang.llvm.LLVMGeneratorBase.loadInteger;
 import static org.simplelang.llvm.LLVMGeneratorBase.loadDouble;
@@ -24,47 +23,45 @@ import static org.simplelang.llvm.io.LLVMConstantsIO.scanfHeader;
 public class LLVMGeneratorIO {
 
     public static void printlnInteger(String number) {
-        mainText += printlnInteger.apply(reg, number);
-        reg++;
+        buffer += printlnInteger.apply(tmp, number);
+        tmp++;
     }
 
     public static void printlnDouble(String number) {
-        mainText += printlnDouble.apply(reg, number);
-        reg++;
+        buffer += printlnDouble.apply(tmp, number);
+        tmp++;
     }
 
     public static void printlnIntegerFromVariable(String id) {
-        loadInteger(id);
-        mainText += printlnIntegerFromVariable.apply(reg, reg - 1);
-        reg++;
+        buffer += printlnIntegerFromVariable.apply(tmp, tmp - 1);
+        tmp++;
     }
 
     public static void printfDoubleFromVariable(String id) {
-        loadDouble(id);
-        mainText += printlnDoubleFromVariable.apply(reg, reg - 1);
-        reg++;
+        buffer += printlnDoubleFromVariable.apply(tmp, tmp - 1);
+        tmp++;
     }
 
-    public static void scanf(String variableName) {
+    public static void scanf(String variableName) { // TODO FIX
         String methodName = methodNamePrefix + methodReg;
-        headerText += scanfHeader.apply(methodName);
+        buffer += scanfHeader.apply(methodName);
         methodReg++;
 
         // char *string;
-        mainText += declareI32.apply(String.valueOf(reg));
-        reg++;
-        mainText += declareByte.apply(variableName);
-        mainText += assignI32.apply(String.valueOf(reg - 1), "0");
+        buffer += declareI32.apply(String.valueOf(tmp));
+        tmp++;
+        buffer += declareByte.apply(variableName);
+        buffer += assignI32.apply(String.valueOf(tmp - 1), "0");
 
         // string = (char *) malloc((6+1)*sizeof(char));
-        mainText += malloc.apply(reg, readBufferSize);
-        mainText += assignByte.apply(String.valueOf(reg), variableName);
-        reg++;
+        buffer += malloc.apply(tmp, readBufferSize);
+        buffer += assignByte.apply(String.valueOf(tmp), variableName);
+        tmp++;
 
         // scanf("%s", string);
-        mainText += loadByte.apply(reg, variableName);
-        reg++;
-        mainText += scanf.apply(reg, methodName, reg - 1);
-        reg++;
+        buffer += loadByte.apply(tmp, variableName);
+        tmp++;
+        buffer += scanf.apply(tmp, methodName, tmp - 1);
+        tmp++;
     }
 }

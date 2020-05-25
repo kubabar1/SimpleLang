@@ -12,28 +12,32 @@ public final class LLVMConstantsBase {
     public static final String methodNamePrefix = "method";
 
     public static final BiFunction<Integer, String, String> loadInteger = (reg, id) ->
-            "\t%" + reg + " = load i32, i32* %" + id + "\n";
+            "\t%" + reg + " = load i32, i32* " + id + "\n";
 
     public static final BiFunction<Integer, String, String> loadDouble = (reg, id) ->
-            "\t%" + reg + " = load double, double* %" + id + "\n";
+            "\t%" + reg + " = load double, double* " + id + "\n";
 
     public static final BiFunction<Integer, String, String> loadByte = (reg, name) ->
-            "\t%" + reg + " = load i8*, i8** %" + name + "\n";
+            "\t%" + reg + " = load i8*, i8** " + name + "\n";
+
+    public static final Function<String, String> declareI32Global = (id) -> "@" + id + " = global i32 0\n";
 
     public static final Function<String, String> declareI32 = (id) -> "\t%" + id + " = alloca i32\n";
+
+    public static final Function<String, String> declareDoubleGlobal = (id) -> "@" + id + " = global double 0\n";
 
     public static final Function<String, String> declareDouble = (id) -> "\t%" + id + " = alloca double\n";
 
     public static final Function<String, String> declareByte = (id) -> "\t%" + id + " = alloca i8*\n";
 
     public static final BiFunction<String, String, String> assignI32 = (id, value) ->
-            "\tstore i32 " + value + ", i32* %" + id + "\n";
+            "\tstore i32 " + value + ", i32* " + id + "\n";
 
     public static final BiFunction<String, String, String> assignDouble = (id, value) ->
-            "\tstore double " + value + ", double* %" + id + "\n";
+            "\tstore double " + value + ", double* " + id + "\n";
 
     public static final BiFunction<String, String, String> assignByte = (id, variableName) ->
-            "\tstore i8* %" + id + ", i8** %" + variableName + "\n";
+            "\tstore i8* %" + id + ", i8** " + variableName + "\n";
 
     public static final BiFunction<Integer, Integer, String> malloc = (reg, bufferSize) ->
             "\t%" + reg + " = call noalias i8* @malloc(i64 " + bufferSize + ")\n";

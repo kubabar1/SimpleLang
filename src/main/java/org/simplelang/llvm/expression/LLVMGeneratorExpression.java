@@ -8,49 +8,49 @@ import static org.simplelang.llvm.expression.LLVMConstantsExpression.multInteger
 import static org.simplelang.llvm.expression.LLVMConstantsExpression.multDouble;
 import static org.simplelang.llvm.expression.LLVMConstantsExpression.divInteger;
 import static org.simplelang.llvm.expression.LLVMConstantsExpression.divDouble;
-import static org.simplelang.llvm.LLVMGeneratorBase.mainText;
-import static org.simplelang.llvm.LLVMGeneratorBase.reg;
+import static org.simplelang.llvm.LLVMGeneratorBase.buffer;
+import static org.simplelang.llvm.LLVMGeneratorBase.tmp;
 
 public class LLVMGeneratorExpression {
 
     public static void addInteger(String val1, String val2) {
-        mainText += addInteger.apply(reg, val1, val2);
-        reg++;
+        buffer += addInteger.apply(tmp, val1, val2);
+        tmp++;
     }
 
     public static void addDouble(String val1, String val2) {
-        mainText += addDouble.apply(reg, val1, val2);
-        reg++;
+        buffer += addDouble.apply(tmp, val1, val2);
+        tmp++;
     }
 
     public static void subInteger(String val1, String val2) {
-        mainText += subInteger.apply(reg, val1, val2);
-        reg++;
+        buffer += subInteger.apply(tmp, val1, val2);
+        tmp++;
     }
 
     public static void subDouble(String val1, String val2) {
-        mainText += subDouble.apply(reg, val1, val2);
-        reg++;
+        buffer += subDouble.apply(tmp, val1, val2);
+        tmp++;
     }
 
     public static void multInteger(String val1, String val2) {
-        mainText += multInteger.apply(reg, val1, val2);
-        reg++;
+        buffer += multInteger.apply(tmp, val1, val2);
+        tmp++;
     }
 
     public static void multDouble(String val1, String val2) {
-        mainText += multDouble.apply(reg, val1, val2);
-        reg++;
+        buffer += multDouble.apply(tmp, val1, val2);
+        tmp++;
     }
 
     public static void divInteger(String val1, String val2) {
-        mainText += divInteger.apply(reg, val1, val2);
-        reg++;
+        buffer += divInteger.apply(tmp, val1, val2);
+        tmp++;
     }
 
     public static void divDouble(String val1, String val2) {
-        mainText += divDouble.apply(reg, val1, val2);
-        reg++;
+        buffer += divDouble.apply(tmp, val1, val2);
+        tmp++;
     }
 
 }

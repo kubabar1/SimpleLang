@@ -15,7 +15,7 @@ public class SimpleLang {
 
     public static void main(String[] args) {
         try {
-            String filePath = "test.smplang";
+            String filePath = "test2.smplang";
             File inputFile = Paths.get(filePath).toFile();
             CharStream input = CharStreams.fromFileName(inputFile.getName());
             org.simplelang.SimpleLangLexer lexer = new org.simplelang.SimpleLangLexer(input);

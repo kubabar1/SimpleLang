@@ -1,8 +1,9 @@
 package org.simplelang.listener;
 
 import org.simplelang.SimpleLangParser;
-import org.simplelang.listener.container.VariablesContainer;
-import org.simplelang.listener.container.base.VariableType;
+import org.simplelang.error.ErrorMessages;
+import org.simplelang.listener.containers.BaseContainer;
+import org.simplelang.listener.containers.model.VariableType;
 import org.simplelang.llvm.comparison.LLVMGeneratorComparison;
 import org.simplelang.llvm.comparison.operators.ComparisonOperatorsDouble;
 import org.simplelang.llvm.comparison.operators.ComparisonOperatorsInteger;
@@ -10,8 +11,15 @@ import org.simplelang.llvm.comparison.operators.ComparisonOperatorsInteger;
 import java.util.Objects;
 
 import static org.simplelang.listener.predicates.IfStatementPredicates.*;
+import static org.simplelang.listener.utils.VariableUtils.getVariableType;
 
 public class ConditionListener extends org.simplelang.SimpleLangBaseListener {
+
+    private BaseContainer baseContainer;
+
+    public ConditionListener() {
+        baseContainer = BaseContainer.getInstance();
+    }
 
     @Override
     public void exitCondition(SimpleLangParser.ConditionContext ctx) {
@@ -38,47 +46,54 @@ public class ConditionListener extends org.simplelang.SimpleLangBaseListener {
                     System.err.println("Line " + ctx.getStart().getLine() + ", incompatible variable types");
                 }
             } else if (variablesComparison.test(leftStatement, rightStatement)) {
-                VariableType variableType1 = VariablesContainer.getInstance().getVariableType(leftStatement.getText());
-                VariableType variableType2 = VariablesContainer.getInstance().getVariableType(rightStatement.getText());
+                String leftStatementText = leftStatement.getText();
+                String rightStatementText = rightStatement.getText();
+                VariableType variableTypeLeft = getVariableType(leftStatementText);
+                VariableType variableTypeRight = getVariableType(rightStatementText);
 
-                VariablesContainer vc = VariablesContainer.getInstance();
-
-                if (!VariablesContainer.getInstance().variableExists(leftStatement.getText())) {
-                    System.err.println("Line " + ctx.getStart().getLine() + ", variable does not exists: "
-                            + leftStatement.getText());
-                } else if (!VariablesContainer.getInstance().variableExists(rightStatement.getText())) {
-                    System.err.println("Line " + ctx.getStart().getLine() + ", variable does not exists: "
-                            + rightStatement.getText());
-                } else if (!variableType1.equals(variableType2)) {
-                    System.err.println("Line " + ctx.getStart().getLine() + ", incompatible variable types: "
-                            + variableType1.toString() + ", " + variableType1.toString());
+                if (Objects.isNull(variableTypeLeft)) {
+                    ErrorMessages.error(ctx.getStart().getLine(), "variable does not exists: " + variableTypeLeft);
+                }
+                if (Objects.isNull(variableTypeRight)) {
+                    ErrorMessages.error(ctx.getStart().getLine(), "variable does not exists: " + variableTypeRight);
+                }
+                if (!variableTypeLeft.equals(variableTypeRight)) {
+                    ErrorMessages.error(ctx.getStart().getLine(), "incompatible variable type: " + variableTypeLeft.toString() + ", " + variableTypeRight.toString());
                 }
 
-                if (VariableType.INT.equals(variableType1)) {
+                if (VariableType.INT.equals(variableTypeLeft)) {
                     LLVMGeneratorComparison.compareIntegerVariables(leftStatement.getText(), ComparisonOperatorsInteger.findByKey(comparisonOperator), rightStatement.getText());
-                } else if (VariableType.FLOAT.equals(variableType1)) {
+                } else if (VariableType.DOUBLE.equals(variableTypeLeft)) {
                     LLVMGeneratorComparison.compareDoubleVariables(leftStatement.getText(), ComparisonOperatorsDouble.findByKey(comparisonOperator), rightStatement.getText());
                 }
             } else if (variableAndNumberComparison.test(leftStatement, rightStatement)) {
                 if (isNumber.test(leftStatement)) {
-                    VariableType variableType = VariablesContainer.getInstance().getVariableType(rightStatement.getText());
+                    VariableType variableType = getVariableType(rightStatement.getText());
+
+                    if (Objects.isNull(variableType)) {
+                        ErrorMessages.error(ctx.getStart().getLine(), "variable does not exists: " + variableType);
+                    }
 
                     if (isIntegerNumber.test(leftStatement) && VariableType.INT.equals(variableType)) {
                         LLVMGeneratorComparison.compareIntegerNumberAndVariable(leftStatement.getText(), ComparisonOperatorsInteger.findByKey(comparisonOperator), rightStatement.getText());
-                    } else if (isFloatingPointNumber.test(leftStatement) && VariableType.FLOAT.equals(variableType)) {
+                    } else if (isFloatingPointNumber.test(leftStatement) && VariableType.DOUBLE.equals(variableType)) {
                         LLVMGeneratorComparison.compareDoubleNumberAndVariable(leftStatement.getText(), ComparisonOperatorsDouble.findByKey(comparisonOperator), rightStatement.getText());
                     } else {
-                        System.err.println("Line " + ctx.getStart().getLine() + ", incompatible variable types");
+                        ErrorMessages.error(ctx.getStart().getLine(), "incompatible variable types");
                     }
                 } else if (isVariable.test(leftStatement)) {
-                    VariableType variableType = VariablesContainer.getInstance().getVariableType(leftStatement.getText());
+                    VariableType variableType = getVariableType(leftStatement.getText());
+
+                    if (Objects.isNull(variableType)) {
+                        ErrorMessages.error(ctx.getStart().getLine(), "variable does not exists: " + variableType);
+                    }
 
                     if (isIntegerNumber.test(rightStatement) && VariableType.INT.equals(variableType)) {
                         LLVMGeneratorComparison.compareIntegerVariableAndNumber(leftStatement.getText(), ComparisonOperatorsInteger.findByKey(comparisonOperator), rightStatement.getText());
-                    } else if (isFloatingPointNumber.test(rightStatement) && VariableType.FLOAT.equals(variableType)) {
+                    } else if (isFloatingPointNumber.test(rightStatement) && VariableType.DOUBLE.equals(variableType)) {
                         LLVMGeneratorComparison.compareDoubleVariableAndNumber(leftStatement.getText(), ComparisonOperatorsDouble.findByKey(comparisonOperator), rightStatement.getText());
                     } else {
-                        System.err.println("Line " + ctx.getStart().getLine() + ", incompatible variable types");
+                        ErrorMessages.error(ctx.getStart().getLine(), "incompatible variable types");
                     }
                 }
             } else if (variableAndBooleanComparison.test(leftStatement, rightStatement)) {

@@ -2,19 +2,19 @@ package org.simplelang.llvm.casting;
 
 import static org.simplelang.llvm.casting.LLVMConstantsCasting.integerToDouble;
 import static org.simplelang.llvm.casting.LLVMConstantsCasting.doubleToInteger;
-import static org.simplelang.llvm.LLVMGeneratorBase.mainText;
-import static org.simplelang.llvm.LLVMGeneratorBase.reg;
+import static org.simplelang.llvm.LLVMGeneratorBase.buffer;
+import static org.simplelang.llvm.LLVMGeneratorBase.tmp;
 
 public class LLVMGeneratorCasting {
 
     public static void integerToDouble(String id) {
-        mainText += integerToDouble.apply(id);
-        reg++;
+        buffer += integerToDouble.apply(tmp, id);
+        tmp++;
     }
 
     public static void doubleToInteger(String id) {
-        mainText += doubleToInteger.apply(id);
-        reg++;
+        buffer += doubleToInteger.apply(tmp, id);
+        tmp++;
     }
 
 }

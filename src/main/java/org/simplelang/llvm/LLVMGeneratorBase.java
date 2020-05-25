@@ -1,22 +1,6 @@
 package org.simplelang.llvm;
 
-import static org.simplelang.llvm.LLVMConstantsBase.mainDef;
-import static org.simplelang.llvm.LLVMConstantsBase.printFloatNewLine;
-import static org.simplelang.llvm.LLVMConstantsBase.declarePrintf;
-import static org.simplelang.llvm.LLVMConstantsBase.declareScanf;
-import static org.simplelang.llvm.LLVMConstantsBase.declareMalloc;
-import static org.simplelang.llvm.LLVMConstantsBase.declareStrcpy;
-import static org.simplelang.llvm.LLVMConstantsBase.declareRealloc;
-import static org.simplelang.llvm.LLVMConstantsBase.declareStrlen;
-import static org.simplelang.llvm.LLVMConstantsBase.declareMemcpy;
-import static org.simplelang.llvm.LLVMConstantsBase.printIntegerNewLine;
-import static org.simplelang.llvm.LLVMConstantsBase.mainReturn;
-import static org.simplelang.llvm.LLVMConstantsBase.declareI32;
-import static org.simplelang.llvm.LLVMConstantsBase.declareDouble;
-import static org.simplelang.llvm.LLVMConstantsBase.assignI32;
-import static org.simplelang.llvm.LLVMConstantsBase.assignDouble;
-import static org.simplelang.llvm.LLVMConstantsBase.loadInteger;
-import static org.simplelang.llvm.LLVMConstantsBase.loadDouble;
+import static org.simplelang.llvm.LLVMConstantsBase.*;
 
 public abstract class LLVMGeneratorBase {
 
@@ -24,7 +8,13 @@ public abstract class LLVMGeneratorBase {
 
     public static String mainText = "";
 
-    public static int reg = 1;
+    public static String buffer = "";
+
+
+    public static int mainTmp = 1;
+
+    public static int tmp = 1;
+
 
     public static int brIf = 0;
 
@@ -44,30 +34,38 @@ public abstract class LLVMGeneratorBase {
         headerText += printFloatNewLine;
     }
 
-    public static void declareInteger(String id) {
-        mainText += declareI32.apply(id);
+    public static void declareInteger(String id, boolean global) {
+        if (global) {
+            headerText += declareI32Global.apply(id);
+        } else {
+            buffer += declareI32.apply(id);
+        }
     }
 
-    public static void declareDouble(String id) {
-        mainText += declareDouble.apply(id);
+    public static void declareDouble(String id, boolean global) {
+        if (global) {
+            headerText += declareDoubleGlobal.apply(id);
+        } else {
+            buffer += declareDouble.apply(id);
+        }
     }
 
     public static void assignInteger(String id, String value) {
-        mainText += assignI32.apply(id, value);
+        buffer += assignI32.apply(id, value);
     }
 
     public static void assignDouble(String id, String value) {
-        mainText += assignDouble.apply(id, value);
+        buffer += assignDouble.apply(id, value);
     }
 
     public static void loadInteger(String id) {
-        mainText += loadInteger.apply(reg, id);
-        reg++;
+        buffer += loadInteger.apply(tmp, id);
+        tmp++;
     }
 
     public static void loadDouble(String id) {
-        mainText += loadDouble.apply(reg, id);
-        reg++;
+        mainText += loadDouble.apply(tmp, id);
+        tmp++;
     }
 
     public static String generate() {
@@ -77,4 +75,7 @@ public abstract class LLVMGeneratorBase {
                 mainReturn;
     }
 
+    public static void closeMain() {
+        mainText += buffer;
+    }
 }

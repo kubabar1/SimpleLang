@@ -1,16 +1,46 @@
-j = 4
 l = 4
-k = j + 2
 
+print(l)
+
+k = 10
+
+print("k")
 print(k)
 
-if(j==l){
-    print("If working!")
-}
-
-i=0
-
-while(i<10) {
+def testFunction() {
+    print("k")
+    print(k)
+    k = 2
+    print("k")
+    print(k)
+    a = 4
+    a = a + l
+    print("test")
+    print(a)
+    i=1
     print(i)
-    i = i + 1
+    i=i+1
+    print(i)
+    i=i+1
+    print(i)
+    i=i+2
+    print(i)
+
+    if(2==2) {
+        print("test")
+    }
+
+    if(a>i){
+        print("ttteeesssttt")
+    }
+
+    t=0
+
+    while(t<5){
+        print(t)
+        t =t +1
+    }
+
 }
+
+testFunction()

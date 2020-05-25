@@ -1,4 +1,4 @@
-package org.simplelang.llvm.if_stmt;
+package org.simplelang.llvm.conditional_operation;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
